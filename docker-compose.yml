@@ -1,0 +1,62 @@
+version: '2.6'
+
+networks:
+  laravel:
+
+services:
+  nginx:
+    image : nginx:stable-alpine
+    container_name: nginx
+    ports:
+      - "8989:80"
+    volumes:
+      - ./src:/var/www/html
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - php
+      - mysql
+    networks:
+      - laravel
+    restart: on-failure
+  mysql:
+    image : mysql:5.7.22
+    container_name: mysql
+    restart : unless-stopped
+    tty: true
+    ports:
+      - "9906:3306"
+    volumes:
+      - ./mysql:/var/lib/mysql
+
+    environment:
+         MYSQL_ROOT_PASSWORD : 123456
+         MYSQL_DATABASE : MYSQL_DATABASE
+         MYSQL_USER : thanhdat
+         MYSQL_PASSWORD : 123456 
+         SERVERNAME : phpmyadmin
+    networks:
+      - laravel
+  php:
+    build: 
+      context : .
+      dockerfile: Dockerfile
+    container_name: php-8
+    volumes:
+      - ./src:/var/www/html
+    ports:
+      - "9000:9000"
+    networks:
+      - laravel
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name : phpmyadmin
+    ports:
+        - '8080:80'
+    restart: always
+    environment:
+        PMA_HOST: mysql
+    depends_on:
+        - mysql
+    networks:
+      - laravel
+    
