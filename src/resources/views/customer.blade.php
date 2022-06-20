@@ -20,6 +20,48 @@
                 {{session('success')}}
             </div>
             @endif
+            @if(isset($data['handle']) )
+            <form action="{{ route('customer.update', $data['customerByID']['id']) }}" method="POST">
+                @csrf
+                <input type="hidden" name="_method" value="put" />
+                <div class="mt-3">
+                    <div class="modal-content">
+
+                        <!-- Modal Header -->
+                        <div class="modal-header bg-info text-white">
+                            <h4 class="modal-title">Sửa thông tin khách hàng</h4>
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        </div>
+
+                        <!-- Modal body -->
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="">Tên khách hàng:</label>
+                                <input type="text" class="form-control" placeholder="" id="" name="name" value="{{$data['customerByID']['name'] }}">
+                            </div>
+                            <div class="form-group">
+                                <label for="">Địa chỉ:</label>
+                                <input type="text" class="form-control" placeholder="" id="" name="address" value="{{$data['customerByID']['address'] }}">
+                            </div>
+                            <div class="form-group">
+                                <label for="">Số điện thoại:</label>
+                                <input type="text" class="form-control" placeholder="" id="" name="phone" value="{{$data['customerByID']['phone'] }}">
+                            </div>
+                            <div class="form-group">
+                                <label for="">Ngày sinh:</label>
+                                <input type="date" class="form-control" placeholder="" id="" name="birthday" value="{{$data['customerByID']['birthday'] }}">
+                            </div>
+                        </div>
+                        <!-- Modal footer -->
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-info">Lưu thông tin</button>
+                            <a href="{{ route('customer.index') }}" type="button" class="btn btn-danger" data-dismiss="modal">Đóng</a>
+                        </div>
+
+                    </div>
+                </div>
+            </form>
+            @endif
             <div class="card-body">
                 <button type="button" class="btn btn-info" data-toggle="modal" data-target="#myModal">
                     Thêm khách hàng
@@ -67,6 +109,8 @@
                         </div>
                     </div>
                 </form>
+
+
                 <!-- List khách hàng  -->
 
                 <table class="table mt-3">
@@ -81,7 +125,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($customerList as $customer)
+                        @foreach($data['customerList'] as $customer)
                         <tr>
                             <th scope="row"><?=$customer->id?></th>
                             <td><?=$customer->name?></td>
@@ -90,7 +134,8 @@
                             <td><?=$customer->birthday?></td>
                             <td>
                                 <a href="{{route('customer.edit',$customer->id)}}" class="btn btn-info">Sửa</a>
-                                <a href="{{url('/customer',['id' => $customer->id])}}" class="btn btn-danger">Xóa</a>
+                                <a href="{{url('/customer/delete',['id' => $customer->id])}}"
+                                    class="btn btn-danger">Xóa</a>
                             </td>
                         </tr>
                         @endforeach

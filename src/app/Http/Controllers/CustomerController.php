@@ -14,8 +14,8 @@ class CustomerController extends Controller
      */
     public function index()
     {
-        $customerList = Customer::get();
-        return view('customer',compact('customerList'));
+        $data['customerList'] = Customer::get();
+        return view('customer',compact('data'));
     }
 
     /**
@@ -57,7 +57,7 @@ class CustomerController extends Controller
      */
     public function show($id)
     {
-        //
+
     }
 
     /**
@@ -68,7 +68,12 @@ class CustomerController extends Controller
      */
     public function edit($id)
     {
-        //
+        $data['customerList'] = Customer::get();
+        $data['handle'] = 'loadFormEdit';
+        $result = Customer::where('id',$id)->get();
+        $data['customerByID'] = $result[0];
+        // dd($data);
+        return view('customer',compact('data'));
     }
 
     /**
@@ -80,7 +85,14 @@ class CustomerController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        Customer::where('id',$id)->update([
+            'name' => $request->name,
+            'address' => $request->address,
+            'phone' => $request->phone,
+            'birthday' => $request->birthday,
+            'updated_at' => Now()
+        ]);
+        return redirect(route("customer.index"))->with('success', 'Cập nhật thông tin khách hàng thành công');
     }
 
     /**

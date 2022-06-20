@@ -17,4 +17,4 @@ Route::get('/', function () {
     return view('customer');
 });
 Route::resource('customer', CustomerController::class);
-Route::delete('/customer/{id}', CustomerController::class,'delete');
+Route::get('/customer/delete/{id}', [CustomerController::class,'delete']);
